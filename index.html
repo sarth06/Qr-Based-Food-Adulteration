@@ -1,42 +1,319 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR Scanner</title>
+  <title>Lay’s India’s Magic Masala – Smart Product Info</title>
+  <meta name="description" content="Clean, trustworthy product info for Lay’s India’s Magic Masala (Blue Pack): Nutri-Score, ingredients with color coding, nutrition facts, origin, and accessibility." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body{font-family:sans-serif;background:#0b0f14;color:white;text-align:center;margin:0;padding:30px;}
-    h1{margin-top:0}
-    #reader{width:300px;height:300px;margin:20px auto;background:black;border-radius:10px;}
-    button{background:#1565c0;color:white;border:none;padding:12px 20px;border-radius:10px;font-size:16px;cursor:pointer;}
+    :root {
+      --bg: #0b0f14;
+      --card: #121826;
+      --muted: #d2d8e6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --orange: #f59e0b;
+      --accent: #60a5fa;
+      --chip-blue: #1565c0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(180deg, #0a1222, #0b0f14 30%);
+      color: white;
+    }
+    a { color: var(--accent); }
+    header {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: blur(8px);
+      background: rgba(10, 18, 34, 0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 16px; }
+    .title {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .pill {
+      background: rgba(96,165,250,0.15);
+      border: 1px solid rgba(96,165,250,0.4);
+      color: #cfe2ff; padding: 4px 10px; border-radius: 999px; font-size: 12px;
+    }
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 960px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px; padding: 18px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    }
+    .h2 { font-size: 20px; margin: 0 0 12px 0; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; gap: 8px; align-items: center; justify-content: center;
+      padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04); color: white; text-decoration: none; cursor: pointer;
+    }
+    .btn:hover { background: rgba(255,255,255,0.08); }
+    .qr {
+      width: 140px; height: auto; border-radius: 12px; background: white; padding: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero {
+      display: grid; gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 1080px) {
+      .hero { grid-template-columns: 1.2fr 0.8fr; }
+    }
+    .viewer {
+      aspect-ratio: 1/1; border-radius: 18px; overflow: hidden;
+      background: radial-gradient(800px 500px at 10% 10%, rgba(21,101,192,0.3), transparent), #0f172a;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: grid; place-items: center; position: relative;
+    }
+    .viewer img { max-width: 88%; height: auto; object-fit: contain; user-select: none; }
+    .thumbs { display: flex; gap: 8px; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
+    .thumbs img { width: 56px; height: 56px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; background: #0f172a; object-fit: cover; }
+    .kvs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kv {
+      background: linear-gradient(180deg, rgba(21,101,192,0.25), rgba(21,101,192,0.05));
+      border: 1px solid rgba(21,101,192,0.4);
+      padding: 12px; border-radius: 12px;
+    }
+    .nutri {
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.05));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 12px; border-radius: 12px;
+    }
+    .nutri .badge {
+      width: 56px; height: 56px; border-radius: 8px;
+      display: grid; place-items: center; font-weight: 800;
+      background: #f59e0b; color: #1f2937; font-size: 22px;
+      border: 2px solid rgba(0,0,0,0.18);
+    }
+    .tag { font-size: 12px; opacity: 0.85; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px dashed rgba(255,255,255,0.08); }
+    .ing-name { font-weight: 600; }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .orange { color: var(--orange); }
+    details summary {
+      cursor: pointer; list-style: none;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    .footnote { font-size: 12px; color: var(--muted); }
+    .badge-eco {
+      display: inline-flex; gap: 6px; align-items: center; padding: 6px 10px; border-radius: 999px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.35); color: #b9f6ca; font-size: 12px;
+    }
+    .section { margin-top: 18px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .switch { display: inline-flex; gap: 8px; align-items: center; }
+    .switch input { width: 40px; height: 22px; }
+    .chip { display: inline-flex; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; color: #cbd5e1;}
+    .cta-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
   </style>
 </head>
 <body>
-  <h1>📷 QR Code Scanner</h1>
-  <p>Tap the button and allow camera access.</p>
-  <button id="startScan">Start Scanning</button>
-  <div id="reader"></div>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <header>
+    <div class="wrap title">
+      <div style="width:10px; height:10px; border-radius:999px; background:var(--chip-blue); box-shadow:0 0 0 6px rgba(21,101,192,0.25)"></div>
+      <h1 style="margin:0; font-size: 18px;">Lay’s India’s Magic Masala <span class="pill">Blue Pack</span></h1>
+      <span class="chip">QR-ready</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="card">
+        <h2 class="h2">Interactive Product Visual</h2>
+        <p class="muted">Swipe thumbnails to simulate 180° view. </p>
+        <div class="viewer">
+          <img id="main-img" src="lays.jpg.png" alt="Lay’s pack hero" draggable="false"/>
+        </div>
+        <div class="thumbs" id="thumbs">
+          <!-- Placeholder images; replace with your own sprite/angles -->
+          
+          <img src="lays.jpg.png" alt="Angle 1"/>
+          <img src="back.jpeg" data-src="" alt="Angle 2"/>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="h2">Basic Info</h2>
+        <div class="kvs">
+          <div class="kv">
+            <div class="muted">Product</div>
+            <div><strong>Lay’s </strong></div>
+          </div>
+          <div class="kv">
+            <div class="muted">Variant</div>
+            <div><strong>India's Magic Masala</strong></div>
+          </div>
+          <div class="kv">
+            <div class="muted">Pack Size</div>
+            <div><strong>Auto-detect: 48g</strong></div>
+          </div>
+          <div class="kv">
+            <div class="muted">MRP</div>
+            <div><strong>₹20</strong></div>
+          </div>
+        </div>
+
+        <div class="section nutri" role="status" aria-live="polite">
+          <div class="badge" aria-label="Nutri-Score D">D</div>
+          <div>
+            <strong>Nutri-Score</strong>
+            <div class="tag">High in fat &amp; salt. Enjoy in moderation.</div>
+          </div>
+        </div>
+
+               <div class="section cta-row">
+          <a class="btn" href="#ingredients">See Ingredients</a>
+          <button class="btn" id="readToggle" aria-pressed="false">🔊 Read Out Loud</button>
+          <a class="btn" href="https://example.com/products/lays-india-magic-masala" target="_blank" rel="noopener">Buy/More Info</a>
+        </div>
+
+        <div class="section">
+          <div class="muted">Scan QR for this page</div>
+          <img src="qrcode_chrome (1).png" alt="QR to product page" class="qr" />
+        </div>
+      </div>
+    </section>
+
+    <!-- INGREDIENTS -->
+    <section id="ingredients" class="card section" aria-labelledby="ingredients-title">
+      <h2 class="h2" id="ingredients-title">Ingredients (Color-coded)</h2>
+      <table>
+        <thead><tr><th>Ingredient</th><th>What it Does</th><th>Learn</th></tr></thead>
+        <tbody>
+          <tr><td class="ing-name green">Potato</td><td>Main ingredient</td><td><details><summary>What is this?</summary>Natural tuber; primary source of starch and texture.</details></td></tr>
+          <tr><td class="ing-name orange">Edible Vegetable Oil (Palmolein, Sunflower Oil)</td><td>Frying medium</td><td><details><summary>What is this?</summary>Oils used for frying; provide crispiness and texture.</details></td></tr>
+          <tr><td class="ing-name orange">Spices &amp; Condiments</td><td>Flavor base</td><td><details><summary>What is this?</summary>Blend of spices such as chili, cumin, coriander, etc., giving masala taste.</details></td></tr>
+          <tr><td class="ing-name green">Iodised Salt</td><td>Adds salty taste</td><td><details><summary>What is this?</summary>Common seasoning; provides sodium and iodine for health.</details></td></tr>
+          <tr><td class="ing-name orange">Maltodextrin</td><td>Bulking agent</td><td><details><summary>What is this?</summary>A carbohydrate from starch; used to carry flavors and improve texture.</details></td></tr>
+          <tr><td class="ing-name green">Black Salt</td><td>Flavor enhancer</td><td><details><summary>What is this?</summary>A mineral salt with a tangy, sulfurous taste used in Indian snacks.</details></td></tr>
+          <tr><td class="ing-name green">Sugar</td><td>Balances taste</td><td><details><summary>What is this?</summary>Provides mild sweetness to balance spices.</details></td></tr>
+          <tr><td class="ing-name orange">Tomato Powder</td><td>Tangy taste</td><td><details><summary>What is this?</summary>Dehydrated tomato; adds acidity and flavor.</details></td></tr>
+          <tr><td class="ing-name red">Acidity Regulators (INS 330, 296, 334)</td><td>Maintain tanginess</td><td><details><summary>What is this?</summary>Chemicals like citric acid (330), malic acid (296), tartaric acid (334); control pH and enhance flavor.</details></td></tr>
+          <tr><td class="ing-name orange">Flavour (Natural &amp; Nature-Identical Flavouring Substances)</td><td>Masala identity</td><td><details><summary>What is this?</summary>Natural and lab-made molecules matching natural flavors; regulated by FSSAI.</details></td></tr>
+          <tr><td class="ing-name red">Anticaking Agent (INS 551)</td><td>Prevents lumps</td><td><details><summary>What is this?</summary>Silicon dioxide; prevents seasoning powder from clumping.</details></td></tr>
+          <tr><td class="ing-name red">Color (INS 160c)</td><td>Orange shade</td><td><details><summary>What is this?</summary>Paprika extract / synthetic carotenoids; adds appealing orange color.</details></td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">Color key — <span class="green">Green: Natural</span> · <span class="orange">Orange: Nature-identical</span> · <span class="red">Additive/Chemical</span></p>
+      <p class="footnote"><strong>Allergen Info:</strong> Contains Onion and Garlic.</p>
+      <p class="footnote"><strong>FSSAI Lic. No.:</strong> 10014064000435</p>
+    </section>
+
+    <!-- NUTRITION FACTS -->
+    <section class="card section" aria-labelledby="nutrition-title">
+      <h2 class="h2" id="nutrition-title">Nutritional Information</h2>
+      <p class="muted">Serving Size = 20g**</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Nutrients</th>
+            <th>Per 100g</th>
+            <th>%RDA Per Serve</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Energy</td><td>539 kcal</td><td>5%</td></tr>
+          <tr><td>Protein</td><td>6.9 g</td><td>–</td></tr>
+          <tr><td>Carbohydrate</td><td>53.4 g</td><td>–</td></tr>
+          <tr><td>Total Sugars</td><td>2.5 g</td><td>–</td></tr>
+          <tr><td>Added Sugars</td><td>0.2 g</td><td>0%</td></tr>
+          <tr><td>Total Fat</td><td>33.1 g</td><td>10%</td></tr>
+          <tr><td>Saturated Fat</td><td>14.8 g</td><td>13%</td></tr>
+          <tr><td>Trans Fat</td><td>0.1 g</td><td>1%</td></tr>
+          <tr><td>Cholesterol</td><td>0 mg</td><td>0%</td></tr>
+          <tr><td>Sodium</td><td>742 mg</td><td>15%</td></tr>
+        </tbody>
+      </table>
+      <p class="footnote">**Approximate values based on FSSAI guidelines.</p>
+    </section>
+   <!-- ORIGIN / AUTH -->
+    <section class="card section" aria-labelledby="origin-title">
+      <h2 class="h2" id="origin-title">Origin &amp; Authenticity</h2>
+      <div class="row">
+        <div class="chip">Batch #: <span class="code">IM0525A21</span></div>
+        <div class="chip">Mfg: <span class="code">Gurugram,Haryana,India</span></div>
+        <span class="badge-eco">♻ Recyclable Pack – Type 5 PP</span>
+      </div>
+    </section>
+
+ <!-- FUN (NO GAME) -->
+<section class="card section" aria-labelledby="fun-title">
+  <h2 class="h2" id="fun-title">Quick Recipe</h2>
+  <p class="muted">Lay’s Bhel (2-min): crush chips, add onion, tomato, green chutney, lemon, coriander. Toss &amp; serve.</p>
+
+  <a href="https://youtube.com/shorts/c5BAyI633Z8?si=5euK9sUCqvQ2EYQs" target="_blank"
+     class="inline-block text-blue-400 hover:text-blue-300 underline font-medium"
+     style="border-radius:12px; display:inline-block; margin:8px 0;">
+     ▶ Watch Recipe Video
+  </a>
+
+  <p class="footnote">Trivia: “Did you know ~1 pack ≈ 1 medium potato (by potato equivalent)?”</p>
+</section>
+
+
+    <!-- HELP & COMPLIANCE -->
+    <section class="card section" aria-labelledby="help-title">
+      <h2 class="h2" id="help-title">Customer Help &amp; Compliance</h2>
+      <div class="row">
+        <a class="btn" href="https://wa.me/0000000000" target="_blank" rel="noopener">WhatsApp Feedback</a>
+        <a class="btn" href="https://www.fssai.gov.in/" target="_blank" rel="noopener">FSSAI Validation</a>
+      </div>
+    </section>
+
+    <footer class="section" style="opacity:0.8; font-size:12px; text-align:center; margin: 24px 0 48px;">
+      © 2025 Techtok • Terms & conditions applied
+      
   <script>
-    const startBtn=document.getElementById('startScan');
-    const readerDiv=document.getElementById('reader');
-    startBtn.onclick=async()=>{
-      if(location.protocol!=='https:'&&location.hostname!=='localhost'){
-        alert('⚠️ Must be opened via HTTPS to use the camera!');
-        return;
-      }
-      readerDiv.style.display='block';
-      startBtn.style.display='none';
-      const qr=new Html5Qrcode('reader');
-      try{
-        await qr.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},
-          txt=>{qr.stop();window.location.href=txt;});
-      }catch(e){
-        alert('Camera error: '+e.message);
-        startBtn.style.display='block';
-        readerDiv.style.display='none';
-      }
+    // Thumbnail click -> swap hero image
+    document.querySelectorAll('#thumbs img').forEach(el => {
+      el.addEventListener('click', () => {
+        const src = el.getAttribute('data-src') || el.src;
+        document.getElementById('main-img').src = src;
+      });
+    });
+
+    // Read out loud (Accessibility) using Web Speech API
+    const synth = window.speechSynthesis;
+    const btn = document.getElementById('readToggle');
+    let speaking = false;
+    function narrate() {
+      const text = [
+        "Lay's India's Magic Masala . Price 20 INR,48 grams, Nutri-Score D. High in fat and salt. Enjoy in moderation.",
+        "Ingredients: Potato,Palmolein, Sunflower Oil, Salt, Nature-identical flavouring substances for Masala, Maltodextrin,Acidity Regulators",
+        "Nutrition per 100 grams: 539 kilocalories, 33.1 grams fat, 14.8 grams saturated fat, 742 mili grams salt, 2.5 grams sugar."
+      ].join(' ');
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-IN";
+      utter.onend = () => { speaking = false; btn.setAttribute('aria-pressed','false'); btn.textContent = '🔊 Read Out Loud'; };
+      synth.speak(utter);
     }
+    btn?.addEventListener('click', () => {
+      if (!speaking) {
+        speaking = true; btn.setAttribute('aria-pressed','true'); btn.textContent = '⏹ Stop';
+        narrate();
+      } else {
+        synth.cancel();
+        speaking = false; btn.setAttribute('aria-pressed','false'); btn.textContent = '🔊 Read Out Loud';
+      }
+    });
   </script>
 </body>
 </html>
