@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR Scanner</title>
+  <style>
+    body{font-family:sans-serif;background:#0b0f14;color:white;text-align:center;margin:0;padding:30px;}
+    h1{margin-top:0}
+    #reader{width:300px;height:300px;margin:20px auto;background:black;border-radius:10px;}
+    button{background:#1565c0;color:white;border:none;padding:12px 20px;border-radius:10px;font-size:16px;cursor:pointer;}
+  </style>
+</head>
+<body>
+  <h1>📷 QR Code Scanner</h1>
+  <p>Tap the button and allow camera access.</p>
+  <button id="startScan">Start Scanning</button>
+  <div id="reader"></div>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <script>
+    const startBtn=document.getElementById('startScan');
+    const readerDiv=document.getElementById('reader');
+    startBtn.onclick=async()=>{
+      if(location.protocol!=='https:'&&location.hostname!=='localhost'){
+        alert('⚠️ Must be opened via HTTPS to use the camera!');
+        return;
+      }
+      readerDiv.style.display='block';
+      startBtn.style.display='none';
+      const qr=new Html5Qrcode('reader');
+      try{
+        await qr.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},
+          txt=>{qr.stop();window.location.href=txt;});
+      }catch(e){
+        alert('Camera error: '+e.message);
+        startBtn.style.display='block';
+        readerDiv.style.display='none';
+      }
+    }
+  </script>
+</body>
+</html>
